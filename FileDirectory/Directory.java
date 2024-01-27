@@ -36,20 +36,24 @@ public class Directory implements Component{
 	@Override
 
 	public String display(String prefix) {
-		String displayString = this.name + ": (count=" + this.getCount() + ", size=" + this.getSize() + ")";
-		
-		for (Component child:children) {
-			displayString += "\n";
-			if (child instanceof Directory) {
-				displayString += prefix;
-				displayString += child.display(prefix + "\t"); // hard coded 
-			} else {
-				displayString += child.display(prefix);
-			}
-		}
-		
-		return displayString;
-	}
+        return displayHelper(prefix, prefix);
+    }
+
+    private String displayHelper(String currentPrefix, String initialPrefix) {
+        String displayString = this.name + ": (count=" + this.getCount() + ", size=" + this.getSize() + ")";
+
+        for (Component child : children) {
+            displayString += "\n";
+            if (child instanceof Directory) {
+                displayString += currentPrefix;
+                displayString += ((Directory) child).displayHelper(currentPrefix + initialPrefix, initialPrefix);
+            } else {
+                displayString += child.display(currentPrefix);
+            }
+        }
+
+        return displayString;
+    }
 	
 	public Component search(String searchedName) {	// returns the component if found within the directory or subdirectories
 	    for (Component child : children) {
